@@ -7,7 +7,7 @@ const app = express();
 
 // create a route handler and associate it with a given route //
 app.get('/', (req, res) => {
-  res.send({ hi: 'there' });
+  res.send({ bye: 'buddy' });
 });
 
 // heroku dynamic port from injected environment variables //
