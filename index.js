@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 // require cooki-session //
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+// import bodyparser so that express can parse POST requests //
+const bodyParser = require('body-parser');
 
 const keys = require('./config/keys');
 // require models //
@@ -19,6 +21,9 @@ mongoose.connect(keys.mongoURI);
 
 // set up application //
 const app = express();
+
+// middleware: //
+app.use(bodyParser.json());
 // tell express to make use of cookies //
 app.use(
   cookieSession({
@@ -32,8 +37,21 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// require authRoutes function and execute it with the express app object //
+// require route functions and execute them with the express app object //
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
+
+// production environment routes for directing routes to react-router //
+if (process.env.NODE_ENV === 'production') {
+  // express will serve up production assets eg. main.js or main.css //
+  app.use(express.static('client/build'));
+
+  // express will serve up index.html if it doesn't recognise route //
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 // heroku dynamic port from injected environment variables //
 const PORT = process.env.PORT || 5000;

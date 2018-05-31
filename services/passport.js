@@ -11,15 +11,14 @@ passport.serializeUser((user, done) => {
   // generate identifying piece of info in order for passport to set up a cookie for us -> user.id //
   // make use of id assigned to this record by MongoDB //
   // .id is a shortcut to string //
-  done(null, user.id);
+  return done(null, user.id);
 });
 
 // passport method to deserialize cookie back into a user //
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(async (id, done) => {
   // search through user collection and return user with corresponding id //
-  User.findById(id).then(user => {
-    done(null, user);
-  });
+  const user = await User.findById(id);
+  return done(null, user);
 });
 
 // passport config //
@@ -33,23 +32,18 @@ passport.use(
       proxy: true
     },
     // callback function to handle access token //
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // query if User collection has googleId equal to profile.id to determine if login or signup //
-      // use promise for asynchronous function calls //
-      User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          // already have a record with the given profile.id //
-
-          // call 'done' to exit passport's callback function: done(<error>, <user>) //
-          done(null, existingUser);
-        } else {
-          // existingUser does not exist //
-          // create new model instance (.save to make persistent) //
-          new User({ googleId: profile.id })
-            .save()
-            .then(user => done(null, user));
-        }
-      });
+      const existingUser = await User.findOne({ googleId: profile.id });
+      if (existingUser) {
+        // already have a record with the given profile.id //
+        // call 'done' to exit passport's callback function: done(<error>, <user>) //
+        return done(null, existingUser);
+      }
+      // existingUser does not exist //
+      // create new model instance (.save to make persistent) //
+      const user = await new User({ googleId: profile.id }).save();
+      return done(null, user);
     }
   )
 );

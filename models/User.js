@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   // describe different properties //
-  googleId: String
+  googleId: String,
+  credits: { type: Number, default: 0 }
 });
 
 // create mongoose Model class if doesn't already exist //
