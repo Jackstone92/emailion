@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 // require models //
 require('./models/User');
+require('./models/Survey');
 
 // require services/passport config //
 require('./services/passport');
@@ -40,6 +41,7 @@ app.use(passport.session());
 // require route functions and execute them with the express app object //
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // production environment routes for directing routes to react-router //
 if (process.env.NODE_ENV === 'production') {

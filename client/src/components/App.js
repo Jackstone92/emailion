@@ -11,9 +11,8 @@ import * as actions from '../actions';
 // import components //
 import Header from './Header/Header';
 import Landing from './Landing/Landing';
-
-const Dashboard = () => <h2>Dashboard</h2>;
-const SurveyNew = () => <h2>SurveyNew</h2>;
+import Dashboard from './Dashboard/Dashboard';
+import SurveyNew from './Survey/SurveyNew';
 
 class App extends Component {
   componentDidMount() {

@@ -3,6 +3,7 @@ import axios from 'axios';
 
 // import action types //
 import { FETCH_USER } from './types';
+import { FETCH_SURVEYS } from './types';
 
 // define action creator //
 // action creator using reduxThunk //
@@ -22,4 +23,22 @@ export const handleToken = token => async dispatch => {
   const res = await axios.post('/api/stripe', token);
   // return exact same user model with updated number of credits //
   dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+// handle survey submission //
+export const submitSurvey = (values, history) => async dispatch => {
+  const res = await axios.post('/api/surveys', values);
+
+  // redirect on completion //
+  history.push('/surveys');
+
+  // return updated user model //
+  dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+// handle fetching of surveys //
+export const fetchSurveys = () => async dispatch => {
+  const res = await axios.get('/api/surveys');
+
+  dispatch({ type: FETCH_SURVEYS, payload: res.data });
 };

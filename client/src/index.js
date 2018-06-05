@@ -16,6 +16,10 @@ import reducers from './reducers';
 // import materializeCSS //
 import 'materialize-css/dist/css/materialize.min.css';
 
+// development only axios helpers //
+import axios from 'axios';
+window.axios = axios;
+
 // create redux store //
 // createStore(<reducers>, <initialState>, <applyMiddleware call>) //
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
